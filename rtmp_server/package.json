@@ -1,0 +1,14 @@
+{
+  "name": "rtmp_server",
+  "version": "1.0.0",
+  "description": "Node RTMP Media Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nischal Dutt",
+  "license": "ISC",
+  "dependencies": {
+    "node-media-server": "^2.2.4"
+  }
+}
