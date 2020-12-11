@@ -58,10 +58,11 @@ export const editStream = (id, formValues) => async (dispatch, getState) => {
   });
   createBrowserHistory.push("/");
 };
-export const deleteStreams = (id) => async (dispatch, getState) => {
+export const deleteStream = (id) => async (dispatch, getState) => {
   await streams.delete(`streams/${id}`);
   dispatch({
     type: DELETE_STREAM,
     payload: id,
   });
+  createBrowserHistory.push("/");
 };
