@@ -9,6 +9,24 @@
       "title": "first stream",
       "description": "description",
       "id": 2
+    },
+    {
+      "title": "third",
+      "description": "with user id",
+      "userId": "101786992116079259423",
+      "id": 3
+    },
+    {
+      "title": "programmatic navigation",
+      "description": "this will not be visible",
+      "userId": "101786992116079259423",
+      "id": 4
+    },
+    {
+      "title": "programmatic navigation",
+      "description": "this will not be visible!!!",
+      "userId": "101786992116079259423",
+      "id": 5
     }
   ]
 }
