@@ -19,7 +19,7 @@ class StreamDelete extends React.Component {
         >
           Delete
         </button>
-        <Link to="/" className="ui button">
+        <Link to="/streams" className="ui button">
           Cancel
         </Link>
       </React.Fragment>

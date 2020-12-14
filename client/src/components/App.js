@@ -6,6 +6,7 @@ import StreamDelete from "./streams/StreamDelete";
 import StreamList from "./streams/StreamList";
 import StreamShow from "./streams/StreamShow";
 import Header from "./Header";
+import Games from "./games";
 import createBrowserHistory from "../history";
 
 const App = () => {
@@ -15,7 +16,8 @@ const App = () => {
         <div>
           <Header />
           <Switch>
-            <Route path="/" exact component={StreamList} />
+            <Route path="/" exact component={Games} />
+            <Route path="/streams" exact component={StreamList} />
             <Route path="/streams/new" exact component={StreamCreate} />
             <Route path="/streams/edit/:id" exact component={StreamEdit} />
             <Route path="/streams/delete/:id" exact component={StreamDelete} />
