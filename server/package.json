@@ -9,16 +9,12 @@
   "author": "Nischal Dutt",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "handlebars": "^4.7.6",
-    "json-server": "^0.16.3",
-    "passport": "^0.4.1",
-    "passport-oauth": "^1.0.0",
-    "querystring": "^0.2.0",
-    "request": "^2.88.2"
+    "got": "^11.8.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

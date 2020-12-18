@@ -71,9 +71,9 @@ export const deleteStream = (id) => async (dispatch, getState) => {
 };
 
 export const loginTwitch = () => async (dispatch, getState) => {
-  const response = await twitchAuth.get("/twitch");
+  const response = await twitchAuth.get("/twitch/callback");
+  console.log("got the response on frontend");
   console.log(response);
-  return response;
 };
 
 // export const fetchTopGames = () => async (dispatch, getState) => {

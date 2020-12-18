@@ -1,146 +1,234 @@
 const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const OAuth2Strategy = require("passport-oauth").OAuth2Strategy;
-const request = require("request");
-const handlebars = require("handlebars");
+const esess = require("express-session");
+const axios = require("axios");
 const cors = require("cors");
+
+const crypto = require("crypto");
+const got = require("got");
 
 require("dotenv").config();
 
-// Define our constants, you will change these with your own
 const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const TWITCH_SECRET = process.env.TWITCH_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const CALLBACK_URL = process.env.CALLBACK_URL; // You can run locally with - http://localhost:3000/auth/twitch/callback
+const CALLBACK_URL = process.env.CALLBACK_URL;
 
-// Initialize Express and middlewares
 const app = express();
-app.use(cors());
-// app.options("*", cors());
-
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.header("Access-Control-Allow-Origin", req.headers.origin);
-//   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
-//   );
-//   if ("OPTIONS" == req.method) {
-//     res.send(200);
-//   } else {
-//     next();
-//   }
-// });
-
+const http = require("http").Server(app);
+http.listen(3001, function () {
+  console.log("Server raised on", 3001);
+});
 app.use(
-  session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false })
-);
-
-app.use(express.static("public"));
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Override passport profile function to get user profile from Twitch API
-OAuth2Strategy.prototype.userProfile = function (accessToken, done) {
-  const options = {
-    url: "https://api.twitch.tv/helix/users",
-    method: "GET",
-    headers: {
-      "Client-ID": TWITCH_CLIENT_ID,
-      Accept: "application/vnd.twitchtv.v5+json",
-      Authorization: "Bearer " + accessToken,
-    },
-  };
-
-  request(options, function (error, response, body) {
-    if (response && response.statusCode == 200) {
-      done(null, JSON.parse(body));
-    } else {
-      done(JSON.parse(body));
-    }
-  });
-};
-
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.use(
-  "twitch",
-  new OAuth2Strategy(
-    {
-      authorizationURL: "https://id.twitch.tv/oauth2/authorize",
-      tokenURL: "https://id.twitch.tv/oauth2/token",
-      clientID: TWITCH_CLIENT_ID,
-      clientSecret: TWITCH_SECRET,
-      callbackURL: CALLBACK_URL,
-      state: true,
-    },
-    function (accessToken, refreshToken, profile, done) {
-      profile.accessToken = accessToken;
-      profile.refreshToken = refreshToken;
-
-      // Securely store user profile in your DB
-      //User.findOrCreate(..., function(err, user) {
-      //  done(err, user);
-      //});
-
-      done(null, profile);
-    }
-  )
-);
-
-// Set route to start OAuth link, this is where you define scopes to request
-app.get(
-  "/auth/twitch",
-  (req, res, next) => {
-    console.log(res);
-    next();
-  },
-  passport.authenticate("twitch", { scope: "user_read" })
-);
-
-// Set route for OAuth redirect
-app.get(
-  "/",
-  (req, res, next) => {
-    console.log("inside");
-    next();
-  },
-  passport.authenticate("twitch", {
-    successRedirect: "/",
-    failureRedirect: "/",
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
   })
 );
 
-// // Define a simple template to safely generate HTML with values from user's profile
-// const template = handlebars.compile(`
-// <html><head><title>Twitch Auth Sample</title></head>
-// <table>
-//     <tr><th>Access Token</th><td>{{accessToken}}</td></tr>
-//     <tr><th>Refresh Token</th><td>{{refreshToken}}</td></tr>
-//     <tr><th>Display Name</th><td>{{display_name}}</td></tr>
-//     <tr><th>Bio</th><td>{{bio}}</td></tr>
-//     <tr><th>Image</th><td>{{logo}}</td></tr>
-// </table></html>`);
-
-// // If user has an authenticated session, display it, otherwise display link to authenticate
-// app.get("/", function (req, res) {
-//   if (req.session && req.session.passport && req.session.passport.user) {
-//     res.send(template(req.session.passport.user));
-//   } else {
-//     res.send(
-//       '<html><head><title>Twitch Auth Sample</title></head><a href="/auth/twitch"><img src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png"></a></html>'
-//     );
-//   }
-// });
-
-app.listen(3001, function () {
-  console.log("Twitch auth sample listening on port 3001!");
+// Setup a session manager
+var session = esess({
+  secret: crypto.randomBytes(4).toString("base64"),
+  resave: true,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: 30 * 60 * 1000,
+  },
+  rolling: true,
 });
+app.use(session);
+
+app
+  .route("/")
+  .get((req, res) => {
+    console.log("Incoming get request");
+
+    if (req.session.token) {
+      // probably logged in
+      // and will suffice for this example
+
+      // validate and return the token details
+      got({
+        url: "https://id.twitch.tv/oauth2/validate",
+        headers: {
+          Authorization: "OAuth " + req.session.token.access_token,
+        },
+        responseType: "json",
+      })
+        .then((resp) => {
+          console.log("Ok", resp.body);
+          console.log({
+            user: req.session.user,
+            token: resp.body,
+          });
+
+          // res.render("loggedin", {
+          //   user: req.session.user,
+          //   token: resp.body,
+          // });
+        })
+        .catch((err) => {
+          console.error("Error body:", err.response.body);
+          // the oAuth dance failed
+          req.session.error =
+            "An Error occured: " +
+            (err.response && err.response.body.message
+              ? err.response.body.message
+              : "Unknown");
+          res.redirect("/");
+        });
+
+      return;
+    }
+
+    // test for query string parameters
+    let { code, error, error_description, scope, state } = req.query;
+
+    if (code) {
+      // do the oAuth dance and exchange the token for a user token
+
+      // first validate the state is valid
+      state = decodeURIComponent(state);
+
+      if (req.session.state != state) {
+        req.session.error = "State does not match. Please try again!";
+        res.redirect("/");
+        return;
+      }
+      // done with the state params
+      delete req.session.state;
+
+      // start the oAuth dance
+      got({
+        url: "https://id.twitch.tv/oauth2/token",
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        form: {
+          client_id: TWITCH_CLIENT_ID,
+          client_secret: TWITCH_SECRET,
+          code: code,
+          grant_type: "authorization_code",
+          redirect_uri: CALLBACK_URL,
+        },
+        responseType: "json",
+      })
+        .then((resp) => {
+          // oAuth dance success!
+          req.session.token = resp.body;
+
+          // we'll go collect the user this token is for
+          return got({
+            url: "https://api.twitch.tv/helix/users",
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Client-ID": TWITCH_CLIENT_ID,
+              Authorization: "Bearer " + req.session.token.access_token,
+            },
+            responseType: "json",
+          });
+        })
+        .then((resp) => {
+          if (resp.body && resp.body.data && resp.body.data[0]) {
+            req.session.user = resp.body.data[0];
+          } else {
+            req.session.warning =
+              "We got a Token but failed to get your Twitch profile from Helix";
+          }
+          res.redirect("/");
+        })
+        .catch((err) => {
+          console.error("Error body:", err.response.body);
+          // the oAuth dance failed
+          req.session.error =
+            "An Error occured: " +
+            (err.response && err.response.body.message
+              ? err.response.body.message
+              : "Unknown");
+          res.redirect("/");
+        });
+
+      return;
+    }
+
+    var auth_error = "";
+    if (error) {
+      auth_error = "oAuth Error " + error_description;
+    }
+
+    // We use state to defend against CSRF attacks.
+    // We'll generate one and store it in the session
+    // twitch will return it to us later
+    req.session.state = crypto.randomBytes(16).toString("base64");
+
+    // this just passes a bunch of vairables to the view
+    // and the view handles the display logic
+    // it's a non exhaustive list of scopes tha exist
+
+    // how scopes are being fetched here is _bad_ but will suffice for this example
+
+    // got({
+    //   url: `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${TWITCH_SECRET}&response_type=code&scope=user:read:email`,
+    //   method: "GET",
+    // })
+    //   .then((res) => {
+    //     console.log("************************");
+    //     res.redirect(res.request.redirects[0]);
+    //   })
+    //   .catch((err) => {
+    //     console.log("++++++++++++++++++++");
+    //     console.log(err);
+    //   });
+    // res.render("generator", {
+    //   client_id: TWITCH_CLIENT_ID,
+    //   redirect_uri: TWITCH_SECRET,
+    //   auth_error,
+    //   scopes: "user:read:email",
+    //   state: req.session.state,
+    // });
+  })
+  .post((req, res) => {
+    console.log("Incoming post request");
+    res.redirect("/");
+  });
+
+app.route("auth/twitch/callback").get((req, res, next) => {
+  console.log("here");
+  got({
+    url: `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${TWITCH_SECRET}&response_type=code&scope=user:read:email`,
+    method: "GET",
+  })
+    .then((data) => {
+      console.log("************************");
+      res.redirect(data.request.redirects[0]);
+    })
+    .catch((err) => {
+      console.log("++++++++++++++++++++");
+      console.log(err);
+    });
+});
+// app.route("/logout/").get((req, res) => {
+//   console.log("Incoming logout request");
+//   // as well as dumoing the session lets revoke the token
+//   got({
+//     url:
+//       "https://id.twitch.tv/oauth2/revoke" +
+//       "?client_id=" +
+//       config.client_id +
+//       "&token=" +
+//       req.session.token.access_token,
+//     method: "post",
+//   })
+//     .then((resp) => {
+//       console.log("KeyRevoke OK", resp.body);
+//     })
+//     .catch((err) => {
+//       console.error("KeyRevoke Fail", err);
+//     });
+
+//   // and dump
+//   req.session.destroy();
+//   res.redirect("/");
+// });

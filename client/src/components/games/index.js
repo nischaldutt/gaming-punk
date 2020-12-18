@@ -5,13 +5,13 @@ import { loginTwitch } from "../../actions";
 class Games extends React.Component {
   componentDidMount() {
     this.props.loginTwitch();
-    const urlParams = new URLSearchParams(this.props.location.search);
-    const code = urlParams.get("code");
-    console.log(code);
+    // const urlParams = new URLSearchParams(this.props.location.search);
+    // const code = urlParams.get("code");
+    // console.log(code);
   }
 
   render() {
-    return <div>Games</div>;
+    return <div>Game</div>;
   }
 }
 
