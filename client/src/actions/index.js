@@ -1,5 +1,5 @@
 import streams from "../api/streams";
-import twitchAuth from "../api/twitchAuth";
+import twitch from "../api/twitch";
 import {
   SIGN_IN,
   SIGN_OUT,
@@ -8,6 +8,7 @@ import {
   FETCH_STREAM,
   EDIT_STREAM,
   DELETE_STREAM,
+  SET_USER_ACCESS_TOKEN,
   FETCH_TOP_GAMES,
 } from "./types";
 import createBrowserHistory from "../history";
@@ -70,12 +71,21 @@ export const deleteStream = (id) => async (dispatch, getState) => {
   createBrowserHistory.push("/streams");
 };
 
-export const loginTwitch = () => async (dispatch, getState) => {
-  const response = await twitchAuth.get("/twitch/callback");
-  console.log("got the response on frontend");
-  console.log(response);
+export const setAccessToken = (access_token) => {
+  return {
+    type: SET_USER_ACCESS_TOKEN,
+    payload: access_token,
+  };
 };
 
-// export const fetchTopGames = () => async (dispatch, getState) => {
-//   const response = await twitch.get("/helix/games/top");
-// };
+export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
+  // const { access_token } = getState();
+  // console.log(getState());
+  const response = await twitch.get("/top", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
+    },
+  });
+  console.log(response);
+};
