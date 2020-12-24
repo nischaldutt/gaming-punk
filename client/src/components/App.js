@@ -9,23 +9,36 @@ import Header from "./Header";
 import Games from "./games";
 import createBrowserHistory from "../history";
 
+import { ThemeProvider } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import theme from "../themes";
+
 const App = () => {
   return (
-    <div className="ui container">
+    <ThemeProvider theme={theme}>
       <Router history={createBrowserHistory}>
-        <div>
-          <Header />
-          <Switch>
-            <Route path="/" exact component={Games} />
-            <Route path="/streams" exact component={StreamList} />
-            <Route path="/streams/new" exact component={StreamCreate} />
-            <Route path="/streams/edit/:id" exact component={StreamEdit} />
-            <Route path="/streams/delete/:id" exact component={StreamDelete} />
-            <Route path="/streams/:id" exact component={StreamShow} />
-          </Switch>
-        </div>
+        <Grid container direction="column">
+          <Grid item>
+            <Header />
+          </Grid>
+
+          <Grid item container>
+            <Switch>
+              <Route path="/" exact component={Games} />
+              <Route path="/streams" exact component={StreamList} />
+              <Route path="/streams/new" exact component={StreamCreate} />
+              <Route path="/streams/edit/:id" exact component={StreamEdit} />
+              <Route
+                path="/streams/delete/:id"
+                exact
+                component={StreamDelete}
+              />
+              <Route path="/streams/:id" exact component={StreamShow} />
+            </Switch>
+          </Grid>
+        </Grid>
       </Router>
-    </div>
+    </ThemeProvider>
   );
 };
 

@@ -79,8 +79,6 @@ export const setAccessToken = (access_token) => {
 };
 
 export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
-  // const { access_token } = getState();
-  // console.log(getState());
   const response = await twitch.get("/top", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -88,4 +86,8 @@ export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
     },
   });
   console.log(response);
+  dispatch({
+    type: FETCH_TOP_GAMES,
+    payload: response.data.data,
+  });
 };
