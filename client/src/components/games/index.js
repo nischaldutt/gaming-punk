@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
+    overflowY: "scroll",
+    padding: "10px",
   },
   loginButton: {
     display: "flex",
@@ -59,29 +61,38 @@ const Games = ({
     }
   }, [searchQuery, setAccessToken]);
 
-  function renderTwitchLoginButton() {
+  const renderTwitchLoginButton = () => {
+    return (
+      <React.Fragment>
+        <Typography className={classes.text}>
+          Aww snap... You need to login to Twitch to view this site.
+        </Typography>
+        <a
+          className={classes.loginButton}
+          href={`https://id.twitch.tv/oauth2/authorize?client_id=${process.env.REACT_APP_TWITCH_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_CALLBACK_URL}&response_type=code&scope=user_read`}
+        >
+          Login to Twitch
+        </a>
+      </React.Fragment>
+    );
+  };
+
+  const renderStreams = () => {
+    return <TwitchStreams />;
+  };
+
+  const renderContent = () => {
     if (!accessToken) {
-      return (
-        <React.Fragment>
-          <Typography className={classes.text}>
-            Aww snap... You need to login to Twitch to view this site.
-          </Typography>
-          <a
-            className={classes.loginButton}
-            href={`https://id.twitch.tv/oauth2/authorize?client_id=${process.env.REACT_APP_TWITCH_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_CALLBACK_URL}&response_type=code&scope=user_read`}
-          >
-            Login to Twitch
-          </a>
-        </React.Fragment>
-      );
+      return renderTwitchLoginButton();
     } else {
-      return <TwitchStreams accessToken={accessToken} />;
+      return renderStreams();
     }
-  }
+  };
 
   return (
     <Paper className={classes.root} square>
-      {renderTwitchLoginButton()}
+      {/* {renderTwitchLoginButton()} */}
+      {renderContent()}
     </Paper>
   );
 };

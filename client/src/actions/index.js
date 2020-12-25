@@ -85,7 +85,6 @@ export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
       "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
     },
   });
-  console.log(response);
   dispatch({
     type: FETCH_TOP_GAMES,
     payload: response.data.data,

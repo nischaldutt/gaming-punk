@@ -12,7 +12,7 @@ export const twitchOauthReducer = (state = null, action) => {
 export const twitchStreamsReducer = (state = [], action) => {
   switch (action.type) {
     case FETCH_TOP_GAMES:
-      return [action.payload];
+      return action.payload;
     default:
       return state;
   }
