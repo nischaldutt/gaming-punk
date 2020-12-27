@@ -2,7 +2,11 @@ import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import authReducer from "./authReducer";
 import streamReducer from "./streamReducer";
-import { twitchOauthReducer, twitchStreamsReducer } from "./twitchReducers";
+import {
+  twitchOauthReducer,
+  twitchTopGamesReducer,
+  twitchStreamsReducer,
+} from "./twitchReducers";
 
 export default combineReducers({
   auth: authReducer,
@@ -10,5 +14,6 @@ export default combineReducers({
   streams: streamReducer,
   clientId: () => process.env.REACT_APP_TWITCH_CLIENT_ID,
   accessToken: twitchOauthReducer,
-  topGames: twitchStreamsReducer,
+  topGames: twitchTopGamesReducer,
+  gamingStreams: twitchStreamsReducer,
 });

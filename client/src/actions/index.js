@@ -10,6 +10,7 @@ import {
   DELETE_STREAM,
   SET_USER_ACCESS_TOKEN,
   FETCH_TOP_GAMES,
+  FETCH_GAMING_STREAMS,
 } from "./types";
 import createBrowserHistory from "../history";
 
@@ -79,7 +80,7 @@ export const setAccessToken = (access_token) => {
 };
 
 export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
-  const response = await twitch.get("/top", {
+  const response = await twitch.get("/games/top", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
@@ -87,6 +88,22 @@ export const fetchTopGames = (accessToken) => async (dispatch, getState) => {
   });
   dispatch({
     type: FETCH_TOP_GAMES,
+    payload: response.data.data,
+  });
+};
+
+export const fetchGamingStreams = (accessToken, gameIds) => async (
+  dispatch,
+  getState
+) => {
+  const response = await twitch.get(`/streams?game_id=${gameIds}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
+    },
+  });
+  dispatch({
+    type: FETCH_GAMING_STREAMS,
     payload: response.data.data,
   });
 };

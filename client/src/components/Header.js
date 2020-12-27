@@ -57,7 +57,10 @@ const Header = (props) => {
 
   return (
     <div className={classes.grow}>
-      <AppBar style={{ backgroundColor: `${theme.palette.primary.light}` }}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: `${theme.palette.primary.light}` }}
+      >
         <Toolbar className={classes.appBar}>
           <IconButton
             edge="start"
@@ -99,7 +102,6 @@ const Header = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-      <Toolbar />
     </div>
   );
 };

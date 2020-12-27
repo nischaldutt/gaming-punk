@@ -91,7 +91,6 @@ const Games = ({
 
   return (
     <Paper className={classes.root} square>
-      {/* {renderTwitchLoginButton()} */}
       {renderContent()}
     </Paper>
   );
