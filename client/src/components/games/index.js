@@ -1,16 +1,22 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import TwitchStreams from "./TwitchStreams";
+import TwitchDashboard from "./TwitchDashboard";
 import { setAccessToken } from "../../actions";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: `${theme.palette.primary.main}`,
-    width: "100vw",
+    backgroundColor: theme.palette.primary.main,
+    flexGrow: 1,
+    height: "calc(100vh - 70px)",
+    overflowY: "scroll",
+  },
+  loginView: {
+    backgroundColor: theme.palette.primary.main,
+    flexGrow: 1,
     height: "calc(100vh - 70px)",
     display: "flex",
     flexDirection: "column",
@@ -18,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     overflow: "hidden",
     overflowY: "scroll",
-    padding: "10px",
   },
   loginButton: {
     display: "flex",
@@ -31,10 +36,11 @@ const useStyles = makeStyles((theme) => ({
       transform: "scale(1.5)",
       color: "#8776eb",
     },
-    color: "#ffffff",
+    color: theme.palette.text.primary,
     padding: "1vw",
   },
   text: {
+    color: theme.palette.text.primary,
     marginBottom: theme.spacing(6),
     padding: "1vmax",
     fontSize: "2vw",
@@ -77,22 +83,18 @@ const Games = ({
     );
   };
 
-  const renderStreams = () => {
-    return <TwitchStreams />;
-  };
-
-  const renderContent = () => {
-    if (!accessToken) {
-      return renderTwitchLoginButton();
-    } else {
-      return renderStreams();
-    }
-  };
-
   return (
-    <Paper className={classes.root} square>
-      {renderContent()}
-    </Paper>
+    <Grid className={classes.root}>
+      {!accessToken ? (
+        <Grid item container xs={12} className={classes.loginView}>
+          {renderTwitchLoginButton()}
+        </Grid>
+      ) : (
+        <Grid item container xs={12} className={classes.root}>
+          <TwitchDashboard />
+        </Grid>
+      )}
+    </Grid>
   );
 };
 
