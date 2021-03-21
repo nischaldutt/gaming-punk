@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { fetchUserInfo } from "../../actions";
 
 import {
@@ -35,64 +36,70 @@ const VideoCard = ({ stream, userInfo }) => {
   );
 
   return (
-    <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt={stream.title}
-          image={streamThumbnailUrl}
-          title={stream.title}
-        />
+    <Link
+      to={{
+        pathname: `/game/${stream.user_login}`,
+        streamInfo: stream,
+      }}
+    >
+      <Card className={classes.root}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            alt={stream.title}
+            image={streamThumbnailUrl}
+            title={stream.title}
+          />
+          <CardContent>
+            <Grid container>
+              <Grid item xs={3}>
+                {/* test if userInfo object in store is empty */}
+                {userInfo &&
+                Object.keys(userInfo).length === 0 &&
+                userInfo.constructor === Object ? (
+                  <Avatar />
+                ) : (
+                  <Avatar
+                    alt={stream.user_name}
+                    src={userInfo[stream.user_id].profile_image_url}
+                  />
+                )}
+              </Grid>
 
-        <CardContent>
-          <Grid container>
-            <Grid item xs={3}>
-              {/* test if userInfo object in store is empty */}
-              {userInfo &&
-              Object.keys(userInfo).length === 0 &&
-              userInfo.constructor === Object ? (
-                <Avatar />
-              ) : (
-                <Avatar
-                  alt={stream.user_name}
-                  src={userInfo[stream.user_id].profile_image_url}
-                />
-              )}
+              <Grid item xs={9}>
+                <Typography
+                  className={classes.streamTitle}
+                  noWrap
+                  gutterBottom
+                  variant="body1"
+                >
+                  {stream.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  className={classes.secondaryText}
+                  component="p"
+                >
+                  {stream.user_name}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  className={classes.secondaryText}
+                  component="p"
+                >
+                  {stream.game_name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {stream.viewer_count > 999
+                    ? `${Math.round(stream.viewer_count / 1000)}K viewers`
+                    : `${stream.viewer_count} viewers`}
+                </Typography>
+              </Grid>
             </Grid>
-
-            <Grid item xs={9}>
-              <Typography
-                className={classes.streamTitle}
-                noWrap
-                gutterBottom
-                variant="body1"
-              >
-                {stream.title}
-              </Typography>
-              <Typography
-                variant="body2"
-                className={classes.secondaryText}
-                component="p"
-              >
-                {stream.user_name}
-              </Typography>
-              <Typography
-                variant="body2"
-                className={classes.secondaryText}
-                component="p"
-              >
-                {stream.game_name}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {stream.viewer_count > 999
-                  ? `${Math.round(stream.viewer_count / 1000)}K viewers`
-                  : `${stream.viewer_count} viewers`}
-              </Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Link>
   );
 };
 

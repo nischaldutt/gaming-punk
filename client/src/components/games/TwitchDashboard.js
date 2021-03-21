@@ -59,9 +59,12 @@ const TwitchDashboard = ({ liveGamingStreams }) => {
             {liveGamingStreams.length ? (
               <ReactPlayer
                 url={`https://www.twitch.tv/${liveGamingStreams[0].user_login}`}
+                className={classes.reactPlayer}
                 playing
                 muted
                 controls
+                width="80%"
+                height={275}
               />
             ) : (
               <Loading />
