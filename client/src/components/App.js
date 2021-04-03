@@ -1,21 +1,24 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import StreamCreate from "./streams/StreamCreate";
-import StreamEdit from "./streams/StreamEdit";
-import StreamDelete from "./streams/StreamDelete";
-import StreamList from "./streams/StreamList";
-import StreamShow from "./streams/StreamShow";
 import Header from "./Header";
-import Games from "./games";
-import VideoPlayer from "./games/VideoPlayer";
-import TwitchLogin from "./games/TwitchLogin";
-import GamesDashboard from "./games/GamesDashboard";
-import StreamsDashboard from "./games/StreamsDashboard";
+import routes from "../routes";
 import createBrowserHistory from "../history";
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import theme from "../themes";
+
+const renderRoutes = () => {
+  return routes.map((route) => {
+    return (
+      <Route
+        path={route.path}
+        exact={route.exact}
+        component={route.component}
+      />
+    );
+  });
+};
 
 const App = () => {
   return (
@@ -27,26 +30,7 @@ const App = () => {
           </Grid>
 
           <Grid item container>
-            <Switch>
-              <Route path="/" exact component={Games} />
-              <Route path="/login" exact component={TwitchLogin} />
-              <Route path="/game/:user_login" exact component={VideoPlayer} />
-              <Route path="/games" exact component={GamesDashboard} />
-              <Route
-                path="/games/:game_name"
-                exact
-                component={StreamsDashboard}
-              />
-              <Route path="/streams" exact component={StreamList} />
-              <Route path="/streams/new" exact component={StreamCreate} />
-              <Route path="/streams/edit/:id" exact component={StreamEdit} />
-              <Route
-                path="/streams/delete/:id"
-                exact
-                component={StreamDelete}
-              />
-              <Route path="/streams/:id" exact component={StreamShow} />
-            </Switch>
+            <Switch>{renderRoutes()}</Switch>
           </Grid>
         </Grid>
       </Router>
