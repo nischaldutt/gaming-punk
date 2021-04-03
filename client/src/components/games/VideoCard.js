@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchUserInfo } from "../../actions";
 
 import {
   Typography,
@@ -13,12 +12,14 @@ import {
   Grid,
   Avatar,
 } from "@material-ui/core";
+import "./Thumbnail.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 288,
-    height: 250,
+    width: 288,
+    height: 269,
     backgroundColor: theme.palette.primary.main,
+    padding: "10px",
   },
   streamTitle: {
     fontWeight: 600,
@@ -28,23 +29,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const VideoCard = ({ stream, userInfo }) => {
+const VideoCard = ({ stream, users, innerRef, width, height }) => {
   const classes = useStyles();
   const streamThumbnailUrl = stream.thumbnail_url.replace(
     /{width}x{height}/g,
-    "288x158"
+    `${width}x${height}`
   );
 
   return (
     <Link
       to={{
         pathname: `/game/${stream.user_login}`,
-        streamInfo: stream,
+        stream,
       }}
     >
-      <Card className={classes.root}>
+      <Card ref={innerRef} className={`${classes.root} fade-in`}>
         <CardActionArea>
           <CardMedia
+            className="fade-in"
             component="img"
             alt={stream.title}
             image={streamThumbnailUrl}
@@ -53,15 +55,14 @@ const VideoCard = ({ stream, userInfo }) => {
           <CardContent>
             <Grid container>
               <Grid item xs={3}>
-                {/* test if userInfo object in store is empty */}
-                {userInfo &&
-                Object.keys(userInfo).length === 0 &&
-                userInfo.constructor === Object ? (
+                {/* test if users object in store is empty
+                OR if user with give stream does not exists in the store*/}
+                {!Object.keys(users).length || !users[stream.user_id] ? (
                   <Avatar />
                 ) : (
                   <Avatar
                     alt={stream.user_name}
-                    src={userInfo[stream.user_id].profile_image_url}
+                    src={users[stream.user_id].profile_image_url}
                   />
                 )}
               </Grid>
@@ -106,12 +107,9 @@ const VideoCard = ({ stream, userInfo }) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     accessToken: state.accessToken,
-    userInfo: state.userInfo,
   };
 };
 
-const mapDispatchToProps = {
-  fetchUserInfo,
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideoCard);

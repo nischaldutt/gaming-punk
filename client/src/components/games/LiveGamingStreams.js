@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { fetchLiveGamingStreams, fetchUserInfo } from "../../actions";
 import VideoCard from "./VideoCard";
 import Loading from "../Loading";
 
-import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Box, Grid, Typography, makeStyles } from "@material-ui/core";
+import theme from "../../themes";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    border: "2px solid green",
-  },
+  root: {},
   streamsDiv: {
     paddingTop: "10px",
   },
@@ -23,36 +22,116 @@ const LiveGamingStreams = ({
   fetchUserInfo,
 }) => {
   const classes = useStyles();
+  const lastCardRef = useRef(null);
+  let [streamsFetched, setStreamsFetched] = useState(false);
 
   // fetching the gaming streams
   useEffect(() => {
-    if (!liveGamingStreams.length) {
+    if (!Object.keys(liveGamingStreams).length) {
       fetchLiveGamingStreams(accessToken);
-    } else {
-      const userIds = liveGamingStreams.map((stream) => stream.user_id);
+    } else if (
+      Object.keys(liveGamingStreams.data).length &&
+      !Object.keys(userInfo).length
+    ) {
+      const userIds = liveGamingStreams.data.map((stream) => stream.user_id);
       const usersToFetch = userIds.join().replace(/,/g, "&id=");
       fetchUserInfo(accessToken, usersToFetch);
     }
-  }, [liveGamingStreams, accessToken, fetchLiveGamingStreams, fetchUserInfo]);
+  }, [
+    liveGamingStreams,
+    accessToken,
+    fetchLiveGamingStreams,
+    userInfo,
+    fetchUserInfo,
+  ]);
+
+  useEffect(() => {
+    if (accessToken && !Object.keys(liveGamingStreams).length) {
+      fetchLiveGamingStreams(accessToken);
+    }
+
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entities) => {
+      const [entity] = entities;
+      if (entity.isIntersecting && liveGamingStreams.pagination.cursor) {
+        observer.unobserve(lastCardRef.current);
+        fetchLiveGamingStreams(
+          accessToken,
+          liveGamingStreams.pagination.cursor
+        );
+        setStreamsFetched(true);
+      }
+    }, options);
+
+    if (lastCardRef.current) {
+      observer.observe(lastCardRef.current);
+    }
+  }, [accessToken, liveGamingStreams, fetchLiveGamingStreams]);
+
+  useEffect(() => {
+    if (accessToken && Object.keys(liveGamingStreams).length) {
+      if (streamsFetched) {
+        const userIds = liveGamingStreams.data
+          .slice(-20)
+          .map((stream) => stream.user_id);
+        const usersToFetch = userIds.join().replace(/,/g, "&id=");
+        fetchUserInfo(accessToken, usersToFetch);
+        setStreamsFetched(false);
+      }
+    }
+  }, [
+    liveGamingStreams,
+    fetchLiveGamingStreams,
+    fetchUserInfo,
+    accessToken,
+    streamsFetched,
+  ]);
 
   const renderGamingStreams = () => {
-    return liveGamingStreams.map((stream) => {
-      return (
-        <Grid item key={stream.id}>
-          <VideoCard stream={stream} />
-        </Grid>
-      );
+    return liveGamingStreams.data.map((stream, index) => {
+      if (liveGamingStreams.data.length - 1 === index) {
+        return (
+          <Grid item key={stream.id}>
+            <VideoCard
+              innerRef={lastCardRef}
+              users={userInfo}
+              stream={stream}
+              width={288}
+              height={158}
+            />
+          </Grid>
+        );
+      } else {
+        return (
+          <Grid item key={stream.id}>
+            <VideoCard
+              users={userInfo}
+              stream={stream}
+              width={288}
+              height={158}
+            />
+          </Grid>
+        );
+      }
     });
   };
 
   return (
     <div>
-      {!liveGamingStreams.length ? (
+      {!Object.keys(liveGamingStreams).length ? (
         <Loading />
       ) : (
         <div className={classes.root}>
           <Typography variant="h5">
-            Live channels we think you’ll like
+            <Box component="span" color={theme.palette.secondary.main}>
+              Live channels{" "}
+            </Box>
+            we think you’ll like
           </Typography>
           <Grid
             container

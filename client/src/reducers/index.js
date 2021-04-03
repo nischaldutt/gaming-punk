@@ -7,6 +7,9 @@ import {
   topGameCategoriesReducer,
   liveGamingStreamsReducer,
   userInfoReducer,
+  selectedGameStreamsReducer,
+  selectedGameUsersReducer,
+  channelTeamsReducer,
 } from "./twitchReducers";
 
 export default combineReducers({
@@ -17,5 +20,8 @@ export default combineReducers({
   accessToken: twitchOauthReducer,
   topGameCategories: topGameCategoriesReducer,
   liveGamingStreams: liveGamingStreamsReducer,
+  channelTeams: channelTeamsReducer,
   userInfo: userInfoReducer,
+  selectedGameStreams: selectedGameStreamsReducer,
+  selectedGameUsers: selectedGameUsersReducer,
 });

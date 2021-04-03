@@ -12,6 +12,10 @@ import {
   FETCH_TOP_GAME_CATEGORIES,
   FETCH_LIVE_GAMING_STREAMS,
   FETCH_USER_INFO,
+  FETCH_SELECTED_GAME_STREAMS,
+  FETCH_SELECTED_GAME_USERS,
+  REFRESH_SELECTED_GAME_STREAMS,
+  FETCH_CHANNEL_TEAMS,
 } from "./types";
 import createBrowserHistory from "../history";
 
@@ -80,11 +84,12 @@ export const setAccessToken = (access_token) => {
   };
 };
 
-export const fetchTopGameCategories = (accessToken) => async (
+export const fetchTopGameCategories = (accessToken, cursor) => async (
   dispatch,
   getState
 ) => {
-  const response = await twitch.get("/games/top", {
+  const cursorEndpoint = cursor ? `?after=${cursor}` : "";
+  const response = await twitch.get(`/games/top${cursorEndpoint}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
@@ -92,23 +97,26 @@ export const fetchTopGameCategories = (accessToken) => async (
   });
   dispatch({
     type: FETCH_TOP_GAME_CATEGORIES,
-    payload: response.data.data,
+    payload: response.data,
   });
 };
 
-export const fetchLiveGamingStreams = (accessToken) => async (
+export const fetchLiveGamingStreams = (accessToken, cursor) => async (
   dispatch,
   getState
 ) => {
-  const response = await twitch.get("/streams", {
+  const response = await twitch.get(`/streams`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
     },
+    params: {
+      after: cursor,
+    },
   });
   dispatch({
     type: FETCH_LIVE_GAMING_STREAMS,
-    payload: response.data.data,
+    payload: response.data,
   });
 };
 
@@ -124,6 +132,68 @@ export const fetchUserInfo = (accessToken, userIds) => async (
   });
   dispatch({
     type: FETCH_USER_INFO,
+    payload: response.data.data,
+  });
+};
+
+export const fetchSelectedLiveGamingStreams = (
+  accessToken,
+  gameId,
+  cursor
+) => async (dispatch, getState) => {
+  const response = await twitch.get(`/streams`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
+    },
+    params: {
+      game_id: gameId,
+      after: cursor,
+    },
+  });
+  dispatch({
+    type: FETCH_SELECTED_GAME_STREAMS,
+    payload: response.data,
+  });
+};
+
+export const fetchSelectedUserInfo = (accessToken, userIds) => async (
+  dispatch,
+  getState
+) => {
+  const response = await twitch.get(`/users?id=${userIds}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
+    },
+  });
+  dispatch({
+    type: FETCH_SELECTED_GAME_USERS,
+    payload: response.data.data,
+  });
+};
+
+export const refreshSelectedLiveGamingStreams = () => {
+  return {
+    type: REFRESH_SELECTED_GAME_STREAMS,
+  };
+};
+
+export const fetchChannelTeams = (accessToken, userId) => async (
+  dispatch,
+  getState
+) => {
+  const response = await twitch.get("/teams/channel", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
+    },
+    params: {
+      broadcaster_id: userId,
+    },
+  });
+  dispatch({
+    type: FETCH_CHANNEL_TEAMS,
     payload: response.data.data,
   });
 };

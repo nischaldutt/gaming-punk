@@ -8,6 +8,9 @@ import StreamShow from "./streams/StreamShow";
 import Header from "./Header";
 import Games from "./games";
 import VideoPlayer from "./games/VideoPlayer";
+import TwitchLogin from "./games/TwitchLogin";
+import GamesDashboard from "./games/GamesDashboard";
+import StreamsDashboard from "./games/StreamsDashboard";
 import createBrowserHistory from "../history";
 
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -26,7 +29,14 @@ const App = () => {
           <Grid item container>
             <Switch>
               <Route path="/" exact component={Games} />
-              <Route pah="/game/:user_login" exact component={VideoPlayer} />
+              <Route path="/login" exact component={TwitchLogin} />
+              <Route path="/game/:user_login" exact component={VideoPlayer} />
+              <Route path="/games" exact component={GamesDashboard} />
+              <Route
+                path="/games/:game_name"
+                exact
+                component={StreamsDashboard}
+              />
               <Route path="/streams" exact component={StreamList} />
               <Route path="/streams/new" exact component={StreamCreate} />
               <Route path="/streams/edit/:id" exact component={StreamEdit} />

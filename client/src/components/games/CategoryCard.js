@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { Typography, makeStyles } from "@material-ui/core";
+import "./Thumbnail.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 140,
-    height: 212,
+    width: 180,
+    height: 250,
     backgroundColor: theme.palette.primary.main,
+    marginBottom: "5px",
   },
   gameTitle: {
+    color: theme.palette.text.primary,
     fontWeight: 600,
   },
   secondaryText: {
@@ -17,22 +21,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CategoryCard = ({ game }) => {
+const CategoryCard = ({ game, innerRef, width, height }) => {
   const classes = useStyles();
-  const url = game.box_art_url.replace(/{width}x{height}/g, "140x192");
+  const gameName = game.name.toLowerCase().split(" ").join("_");
+  const thumbnailUrl = game.box_art_url.replace(
+    /{width}x{height}/g,
+    `${width}x${height}`
+  );
 
   return (
-    <div elevation={3} className={classes.root}>
-      <img src={url} alt={game.name} />
-      <Typography
-        className={classes.gameTitle}
-        noWrap
-        gutterBottom
-        variant="body1"
-      >
-        {game.name}
-      </Typography>
-    </div>
+    <Link to={{ pathname: `/games/${gameName}`, game }}>
+      <div ref={innerRef} className={classes.root}>
+        <img
+          className={`${classes.gameImage} fade-in`}
+          src={thumbnailUrl}
+          alt={game.name}
+        />
+        <Typography
+          className={classes.gameTitle}
+          noWrap
+          gutterBottom
+          variant="body1"
+        >
+          {game.name}
+        </Typography>
+      </div>
+    </Link>
   );
 };
 

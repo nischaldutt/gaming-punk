@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Loading from "../Loading";
+import TwitchLogin from "./TwitchLogin";
 
 import ReactPlayer from "react-player";
-import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.primary.main,
-    flexGrow: 1,
+    width: "100%",
     height: "calc(100vh - 70px)",
     overflowY: "scroll",
   },
@@ -16,37 +17,47 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "calc(100vh - 70px)",
   },
+  layoutDiv: {
+    width: "100%",
+  },
+  chatEmbed: {
+    border: "none",
+  },
 }));
-const VideoPlayer = ({ location: { streamInfo: stream }, pathname }) => {
+
+const VideoPlayer = ({ location: { stream }, pathname, accessToken }) => {
   const classes = useStyles();
   const [channel, setChannel] = useState(stream ? stream.user_login : null);
 
   useEffect(() => {
     if (channel === null) {
-      console.log("path without store");
       setChannel(window.location.pathname.split("/")[2]);
     }
   }, [channel]);
 
   return (
     <Grid container className={classes.root}>
-      {!channel ? (
+      {!accessToken ? (
+        <TwitchLogin />
+      ) : !channel ? (
         <Loading />
       ) : (
         <Grid container className={classes.twitchEmbed}>
-          <Grid item xs={9}>
+          <Grid item lg={9} sm={12} className={classes.layoutDiv}>
             <ReactPlayer
               url={`https://www.twitch.tv/${channel}`}
+              volume={0.8}
               playing
               controls
               width="100%"
               height="100%"
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item lg={3} sm={12} className={classes.layoutDiv}>
             <iframe
+              className={classes.chatEmbed}
               title={channel}
-              src={`https://www.twitch.tv/embed/${channel}/chat?darkpopout&parent=localhost`}
+              src={`https://www.twitch.tv/embed/${channel}/chat?darkpopout&parent=localhost&parent=gaming-punk.netlify.app`}
               height="100%"
               width="100%"
             ></iframe>
@@ -57,7 +68,9 @@ const VideoPlayer = ({ location: { streamInfo: stream }, pathname }) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state, ownProps) => ({
+  accessToken: state.accessToken,
+});
 
 const mapDispatchToProps = {};
 

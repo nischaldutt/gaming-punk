@@ -3,16 +3,12 @@ import { Link } from "react-router-dom";
 import GoogleAuth from "./GoogleAuth";
 
 import { useTheme } from "@material-ui/core/styles";
-import { fade, makeStyles } from "@material-ui/core/styles";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
 import LiveTvIcon from "@material-ui/icons/LiveTv";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     display: "flex",
   },
-  menubutton: {
+  menuButton: {
     marginRight: theme.spacing(6),
   },
   iconHeader: {
@@ -64,7 +60,7 @@ const Header = (props) => {
         <Toolbar className={classes.appBar}>
           <IconButton
             edge="start"
-            className={classes.menubutton}
+            className={classes.menuButton}
             color="inherit"
           >
             <Link to="/">
@@ -72,24 +68,11 @@ const Header = (props) => {
             </Link>
           </IconButton>
 
-          <Link to="/">
+          <Link to="/games">
             <Typography className={classes.headerItems} variant="h5" noWrap>
               Browse
             </Typography>
           </Link>
-          <Link to="/">
-            {" "}
-            <Typography className={classes.headerItems} variant="h5" noWrap>
-              Esports
-            </Typography>
-          </Link>
-          <Link to="/">
-            {" "}
-            <Typography className={classes.headerItems} variant="h5" noWrap>
-              Music
-            </Typography>
-          </Link>
-
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
@@ -105,21 +88,5 @@ const Header = (props) => {
     </div>
   );
 };
-
-// const Header = () => {
-//   return (
-//     <div className="ui secondary pointing menu">
-//       <Link to="/" className="item">
-//         Twitch.tv
-//       </Link>
-//       <div className="right menu">
-//         <Link to="/streams" className="item">
-//           All Streams
-//         </Link>
-//         <GoogleAuth />
-//       </div>
-//     </div>
-//   );
-// };
 
 export default Header;

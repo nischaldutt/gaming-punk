@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import TopGamesCategories from "./TopGamesCategories";
 import LiveGamingStreams from "./LiveGamingStreams";
+import ChannelBar from "./ChannelBar";
+import TwitchTabs from "./TwitchTabs";
 import Loading from "../Loading";
 
 import ReactPlayer from "react-player";
@@ -11,26 +13,18 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
   },
+  channelBar: {
+    width: "auto",
+  },
   root: {
     overflowY: "scroll",
-    border: "2px solid red",
     color: theme.palette.text.primary,
     width: "calc(100% - 60px)",
   },
-  channelBar: {
-    width: "60px",
-    height: "calc(100vh - 70px)",
-    border: "2px solid green",
-    backgroundColor: theme.palette.primary.light,
-    position: "sticky",
-    top: 0,
-  },
   dashboard: {
     padding: "20px",
-    border: "2px solid blue",
   },
   dashboardDiv: {
-    border: "2px solid white",
     padding: "10px",
   },
 }));
@@ -39,16 +33,14 @@ const TwitchDashboard = ({ liveGamingStreams }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <Grid container>
       {/* Vertical Channel Bar */}
-      <Grid container direction="column" className={classes.channelBar}>
-        <Grid item>1</Grid>
-        <Grid item>2</Grid>
-        <Grid item>3</Grid>
+      <Grid item container className={classes.channelBar}>
+        <ChannelBar />
       </Grid>
 
       {/* Dashboard */}
-      <Grid container className={classes.root} spacing={0}>
+      <Grid item container className={classes.root} spacing={0}>
         <Grid container item direction="column" className={classes.dashboard}>
           <Grid
             item
@@ -56,29 +48,32 @@ const TwitchDashboard = ({ liveGamingStreams }) => {
             justify="center"
             className={classes.dashboardDiv}
           >
-            {liveGamingStreams.length ? (
+            {Object.keys(liveGamingStreams).length ? (
               <ReactPlayer
-                url={`https://www.twitch.tv/${liveGamingStreams[0].user_login}`}
+                url={`https://www.twitch.tv/${liveGamingStreams.data[0].user_login}`}
                 className={classes.reactPlayer}
                 playing
-                muted
+                volume={0.8}
                 controls
                 width="80%"
-                height={275}
+                height={500}
               />
             ) : (
               <Loading />
             )}
           </Grid>
-          <Grid item container className={classes.dashboardDiv}>
-            <LiveGamingStreams />
+          <Grid item container>
+            <TwitchTabs />
           </Grid>
           <Grid item container className={classes.dashboardDiv}>
             <TopGamesCategories />
           </Grid>
+          <Grid item container className={classes.dashboardDiv}>
+            <LiveGamingStreams />
+          </Grid>
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
