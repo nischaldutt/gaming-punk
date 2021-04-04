@@ -4,8 +4,7 @@ import Header from "./Header";
 import routes from "../routes";
 import createBrowserHistory from "../history";
 
-import { ThemeProvider } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import { Grid, ThemeProvider } from "@material-ui/core";
 import theme from "../themes";
 
 const renderRoutes = () => {

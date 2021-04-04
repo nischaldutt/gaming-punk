@@ -2,6 +2,6 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = (app) => {
   app.use(
-    createProxyMiddleware("/auth/*", { target: "http://localhost:3001" })
+    createProxyMiddleware("/auth/*", { target: process.env.REACT_APP_PROXY })
   );
 };

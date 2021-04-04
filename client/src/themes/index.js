@@ -19,6 +19,12 @@ const theme = createMuiTheme({
       fontWeight: 900,
       color: "#c9c9c9",
     },
+    h3: {
+      fontWeight: 900,
+      "@media (max-width: 600px)": {
+        fontSize: "2rem",
+      },
+    },
     h4: {
       fontSize: "1.2rem",
       fontWeight: 900,

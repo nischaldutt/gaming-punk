@@ -4,29 +4,41 @@ import { useHistory } from "react-router-dom";
 import { setAccessToken } from "../../actions";
 
 import { Grid, Typography, Button, makeStyles } from "@material-ui/core";
+import background from "../../assets/images/background.png";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    backgroundImage: `url(${background})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  },
   root: {
     display: "flex",
     justifyContent: "center",
   },
   loginButton: {
-    width: "150px",
+    width: "200px",
     margin: "0 auto",
-    border: `2px solid ${theme.palette.secondary.main}`,
+    fontSize: "1.3rem",
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.text.primary,
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
       color: theme.palette.text.primary,
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.down("sm")]: {
       width: "200px",
+      fontSize: "1rem",
     },
   },
   text: {
     color: theme.palette.text.primary,
     textAlign: "center",
     padding: "2vw",
+  },
+  emblem: {
+    width: "100%",
+    borderRadius: "15px",
   },
 }));
 
@@ -50,17 +62,25 @@ const TwitchLogin = ({ accessToken, setAccessToken }) => {
   }, [searchQuery, setAccessToken]);
 
   return (
-    <Grid container>
-      <Grid item xs={3}></Grid>
-      <Grid className={classes.root} item container direction="column" xs={6}>
-        <Typography variant="h4" className={classes.text}>
+    <Grid container className={classes.container}>
+      <Grid item xs={0} sm={3}></Grid>
+      <Grid
+        className={classes.root}
+        item
+        container
+        alignItems="center"
+        direction="column"
+        xs={12}
+        sm={6}
+      >
+        <Typography variant="h3" className={classes.text}>
           {loginMessage}
         </Typography>
         <Button className={classes.loginButton} size="large" href={oAuthLink}>
           {loginButtonText}
         </Button>
       </Grid>
-      <Grid item xs={3}></Grid>
+      <Grid item xs={0} sm={3}></Grid>
     </Grid>
   );
 };

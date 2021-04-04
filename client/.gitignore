@@ -12,7 +12,8 @@
 /build
 
 # misc
-/.env
+/.env.development
+/.env.production
 .DS_Store
 .env.local
 .env.development.local
