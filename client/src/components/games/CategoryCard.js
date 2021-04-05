@@ -31,6 +31,7 @@ const CategoryCard = ({ game, innerRef, width, height }) => {
 
   return (
     <Link to={{ pathname: `/games/${gameName}`, game }}>
+      {/* if innerRef is provided it will point to the last card */}
       <div ref={innerRef} className={classes.root}>
         <img
           className={`${classes.gameImage} fade-in`}

@@ -4,7 +4,8 @@
   "description": "json-server ",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js && json-server -p 3001 -w db.json"
+    "start": "export NODE_ENV=development && node index.js",
+    "production": "export NODE_ENV=production && node index.js"
   },
   "author": "Nischal Dutt",
   "license": "ISC",

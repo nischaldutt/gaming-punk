@@ -21,14 +21,15 @@ const TopGamesCategories = ({
 }) => {
   const classes = useStyles();
 
-  // fetching top games
   useEffect(() => {
     if (!Object.keys(topGameCategories).length) {
+      // fetch top games in the initial render
       fetchTopGameCategories(accessToken);
     }
   }, [accessToken, topGameCategories, fetchTopGameCategories]);
 
   const renderTopGameCategories = () => {
+    // render only first 20 game cards in the home page
     return topGameCategories.data.map((game, index) => {
       if (index > 20) {
         return null;

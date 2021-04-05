@@ -18,7 +18,7 @@ const CALLBACK_URL = process.env.CALLBACK_URL;
 
 const app = express();
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", process.env.REACT_APP_PROXY);
   next();
 });
 
@@ -35,6 +35,13 @@ app.use(
   })
 );
 app.use(express.static("public"));
+
+app.get("/", (req, res, next) => {
+  res.send({
+    status: 200,
+    result: "recieved",
+  });
+});
 
 app.get("/auth/twitch/callback", (req, res, next) => {
   console.log("endpoint hit");
@@ -59,11 +66,12 @@ app.get("/auth/twitch/callback", (req, res, next) => {
     console.log("got the token");
     console.log(resp.body);
     res.redirect(
-      `http://localhost:3000?access_token=${resp.body.access_token}`
+      `${process.env.REACT_APP_PROXY}/?access_token=${resp.body.access_token}`
     );
   });
 });
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
   console.log("Server live at port 3001.");
 });
+// "start": "node index.js && json-server -p 3001 -w db.json

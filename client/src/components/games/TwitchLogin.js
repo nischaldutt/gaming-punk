@@ -63,15 +63,15 @@ const TwitchLogin = ({ accessToken, setAccessToken }) => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item xs={0} sm={3}></Grid>
+      <Grid item sm={false} lg={3}></Grid>
       <Grid
         className={classes.root}
         item
         container
         alignItems="center"
         direction="column"
-        xs={12}
-        sm={6}
+        sm={12}
+        lg={6}
       >
         <Typography variant="h3" className={classes.text}>
           {loginMessage}
@@ -80,7 +80,7 @@ const TwitchLogin = ({ accessToken, setAccessToken }) => {
           {loginButtonText}
         </Button>
       </Grid>
-      <Grid item xs={0} sm={3}></Grid>
+      <Grid item sm={false} lg={3}></Grid>
     </Grid>
   );
 };

@@ -49,12 +49,18 @@ export const StreamsDashboard = ({
   location: { game },
 }) => {
   const classes = useStyles();
+  // declare ref variable that references the last stream card visible in the viewport
+  // while in infinite scroll
   const lastCardRef = useRef(null);
+  // streamsFetched state variable indicates when to fetch the data of streamers
+  // only after the respective streams have been fetched
   let [streamsFetched, setStreamsFetched] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
   useEffect(() => {
     if (accessToken) {
+      // if the user is logged in then only we can have "game" object
+      // else we need to get the game by parsing the location and calling some fetch function
       setThumbnailUrl(
         game.box_art_url.replace(/{width}x{height}/g, `${170}x${226}`)
       );
@@ -67,6 +73,8 @@ export const StreamsDashboard = ({
       Object.keys(selectedGameStreams).length &&
       selectedGameStreams.data[0].game_id !== game.id
     ) {
+      // if user changes the selected game then we remove all previous game data
+      // and reinitialize "selectedGameStreams" to empty object
       refreshSelectedLiveGamingStreams();
     }
   }, [
@@ -78,9 +86,11 @@ export const StreamsDashboard = ({
 
   useEffect(() => {
     if (accessToken && !Object.keys(selectedGameStreams).length) {
+      // fetch the gaming streams of selected game in the initial render
       fetchSelectedLiveGamingStreams(accessToken, game.id);
     }
 
+    // "Intersection Observer" used for infinite scroll
     const options = {
       root: null,
       rootMargin: "0px",
@@ -90,7 +100,12 @@ export const StreamsDashboard = ({
     const observer = new IntersectionObserver((entities) => {
       const [entity] = entities;
       if (entity.isIntersecting && selectedGameStreams.pagination.cursor) {
+        // if last card if in the viewport and we have cursor to fetch next results
+
+        // first remove currently observed last card reference so as to avoid calling
+        // with same cursor repeatedly
         observer.unobserve(lastCardRef.current);
+        // fetch the next results
         fetchSelectedLiveGamingStreams(
           accessToken,
           game.id,
@@ -101,6 +116,8 @@ export const StreamsDashboard = ({
     }, options);
 
     if (lastCardRef.current) {
+      // if the last card has been rendered but is not on the viewport yet,
+      // start observing the card
       observer.observe(lastCardRef.current);
     }
   }, [
@@ -114,11 +131,13 @@ export const StreamsDashboard = ({
   useEffect(() => {
     if (accessToken && Object.keys(selectedGameStreams).length) {
       if (streamsFetched) {
+        // the streams have been fetched only then fetch the last 20 users
         const userIds = selectedGameStreams.data
           .slice(-20)
           .map((stream) => stream.user_id);
         const usersToFetch = userIds.join().replace(/,/g, "&id=");
         fetchSelectedUserInfo(accessToken, usersToFetch);
+        // set streamsFetched to false so in next request, the process can be repeated
         setStreamsFetched(false);
       }
     }
@@ -127,6 +146,7 @@ export const StreamsDashboard = ({
   const renderSearchCards = () => {
     return selectedGameStreams.data.map((stream, index) => {
       if (selectedGameStreams.data.length - 1 === index) {
+        // if the card is last in streams list then set ref in it
         return (
           <Grid item key={stream.id}>
             <VideoCard
@@ -139,6 +159,7 @@ export const StreamsDashboard = ({
           </Grid>
         );
       } else {
+        // else no need to set ref
         return (
           <Grid item key={stream.id}>
             <VideoCard

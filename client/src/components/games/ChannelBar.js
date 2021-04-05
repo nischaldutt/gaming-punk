@@ -74,6 +74,8 @@ const useStyles = makeStyles((theme) => ({
 const ChannelBar = ({ userInfo }) => {
   const classes = useStyles();
   const [open, setOpen] = useState({});
+  // open is a state object that stores boolean values for each user
+  // that indicates if the respective user's modal is open or not
 
   const renderModalBody = (user) => {
     const buttonText = "View Live Stream Now";
@@ -141,6 +143,8 @@ const ChannelBar = ({ userInfo }) => {
     return Object.keys(userInfo).map((userId) => {
       const user = userInfo[userId];
 
+      // initialize the object attribute values to false
+      // that indicates that all modals are closed
       if (open[userId] === undefined) {
         open[userId] = false;
       }

@@ -6,7 +6,6 @@ import {
   FETCH_SELECTED_GAME_STREAMS,
   FETCH_SELECTED_GAME_USERS,
   REFRESH_SELECTED_GAME_STREAMS,
-  FETCH_CHANNEL_TEAMS,
 } from "../actions/types";
 
 export const twitchOauthReducer = (state = null, action) => {
@@ -126,18 +125,6 @@ export const selectedGameUsersReducer = (state = {}, action) => {
         return user;
       });
       return { ...state };
-    }
-    default:
-      return state;
-  }
-};
-
-export const channelTeamsReducer = (state = [], action) => {
-  switch (action.type) {
-    case FETCH_CHANNEL_TEAMS: {
-      let teams = action.payload;
-      teams = !teams ? [] : teams;
-      return [...teams];
     }
     default:
       return state;

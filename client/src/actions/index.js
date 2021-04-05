@@ -15,7 +15,6 @@ import {
   FETCH_SELECTED_GAME_STREAMS,
   FETCH_SELECTED_GAME_USERS,
   REFRESH_SELECTED_GAME_STREAMS,
-  FETCH_CHANNEL_TEAMS,
 } from "./types";
 import createBrowserHistory from "../history";
 
@@ -177,23 +176,4 @@ export const refreshSelectedLiveGamingStreams = () => {
   return {
     type: REFRESH_SELECTED_GAME_STREAMS,
   };
-};
-
-export const fetchChannelTeams = (accessToken, userId) => async (
-  dispatch,
-  getState
-) => {
-  const response = await twitch.get("/teams/channel", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Client-Id": process.env.REACT_APP_TWITCH_CLIENT_ID,
-    },
-    params: {
-      broadcaster_id: userId,
-    },
-  });
-  dispatch({
-    type: FETCH_CHANNEL_TEAMS,
-    payload: response.data.data,
-  });
 };

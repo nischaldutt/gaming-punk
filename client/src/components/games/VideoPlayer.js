@@ -28,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
 const VideoPlayer = ({ location: { stream }, pathname, accessToken }) => {
   const classes = useStyles();
   const [channel, setChannel] = useState(stream ? stream.user_login : null);
+  // if stream is provided that means user came from the app else
+  // user directly access the route without login
 
   useEffect(() => {
     if (channel === null) {

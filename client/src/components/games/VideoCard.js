@@ -43,6 +43,7 @@ const VideoCard = ({ stream, users, innerRef, width, height }) => {
         stream,
       }}
     >
+      {/* if innerRef is provided it will point to the last card */}
       <Card ref={innerRef} className={`${classes.root} fade-in`}>
         <CardActionArea>
           <CardMedia
@@ -55,16 +56,22 @@ const VideoCard = ({ stream, users, innerRef, width, height }) => {
           <CardContent>
             <Grid container>
               <Grid item xs={3}>
-                {/* test if users object in store is empty
-                OR if user with give stream does not exists in the store*/}
-                {!Object.keys(users).length || !users[stream.user_id] ? (
-                  <Avatar />
-                ) : (
-                  <Avatar
-                    alt={stream.user_name}
-                    src={users[stream.user_id].profile_image_url}
-                  />
-                )}
+                {!Object.keys(users).length || !users[stream.user_id]
+                  ? ({
+                      /* if users object in store is empty
+                OR if user with provided stream does not exists in the store 
+                then render default avatar*/
+                    },
+                    (<Avatar />))
+                  : ({
+                      /* else render the user's fetched avatar */
+                    },
+                    (
+                      <Avatar
+                        alt={stream.user_name}
+                        src={users[stream.user_id].profile_image_url}
+                      />
+                    ))}
               </Grid>
 
               <Grid item xs={9}>

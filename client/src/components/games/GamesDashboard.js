@@ -26,13 +26,17 @@ const GamesDashboard = ({
   topGameCategories,
 }) => {
   const classes = useStyles();
+  // declare ref variable that references the last stream card visible in the viewport
+  // while in infinite scroll
   const lastCardRef = useRef(null);
 
   useEffect(() => {
     if (accessToken && !Object.keys(topGameCategories).length) {
+      // fetch the top games in the initial render
       fetchTopGameCategories(accessToken);
     }
 
+    // "Intersection Observer" used for infinite scroll
     const options = {
       root: null,
       rootMargin: "0px",
@@ -42,7 +46,12 @@ const GamesDashboard = ({
     const observer = new IntersectionObserver((entities) => {
       const [entity] = entities;
       if (entity.isIntersecting && topGameCategories.pagination.cursor) {
+        // if last card if in the viewport and we have cursor to fetch next results
+
+        // first remove currently observed last card reference so as to avoid calling
+        // with same cursor repeatedly
         observer.unobserve(lastCardRef.current);
+        // fetch the next results
         fetchTopGameCategories(
           accessToken,
           topGameCategories.pagination.cursor
@@ -51,6 +60,8 @@ const GamesDashboard = ({
     }, options);
 
     if (lastCardRef.current) {
+      // if the last card has been rendered but is not on the viewport yet,
+      // start observing the card
       observer.observe(lastCardRef.current);
     }
   }, [accessToken, topGameCategories, fetchTopGameCategories, lastCardRef]);
@@ -58,6 +69,7 @@ const GamesDashboard = ({
   const renderSearchCards = () => {
     return topGameCategories.data.map((game, index) => {
       if (topGameCategories.data.length - 1 === index) {
+        // if the card is last in games list then set ref in it
         return (
           <Grid item key={game.id}>
             <CategoryCard
@@ -69,6 +81,7 @@ const GamesDashboard = ({
           </Grid>
         );
       } else {
+        // else no need to set ref
         return (
           <Grid item key={game.id}>
             <CategoryCard game={game} width={170} height={226} />
