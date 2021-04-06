@@ -4,7 +4,8 @@ import { useHistory } from "react-router-dom";
 import { setAccessToken } from "../../actions";
 
 import { Grid, Typography, Button, makeStyles } from "@material-ui/core";
-import background from "../../assets/images/background.png";
+
+const background = "https://i.imgur.com/YuIz3hY.png";
 
 const useStyles = makeStyles((theme) => ({
   container: {
