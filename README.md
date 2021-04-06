@@ -1,4 +1,93 @@
-# Getting Started with Create React App
+<div>
+  <h1 align="center">
+    <a href="https://gaming-punk.netlify.app/">Gaming Punk 🎮</a>
+  </h1>
+  <strong>
+    Watch top live gaming streams happening around the world. 
+  </strong>
+  <p>
+    This web application is developed using <a href="https://dev.twitch.tv/docs/api/">Twitch API</a> that provides tools for developing integrations with Twitch.
+  </p>
+</div>
+
+<hr />
+
+## Features
+
+- 🎮 Watch live streams from top gaming streamers around the world.
+- 💻 Twitch video player embedded using [React Player](https://github.com/CookPete/react-player).
+- 💬 [Twitch live chat](https://dev.twitch.tv/docs/embed/chat) embedded.
+- 🔑 Authorization code flow implemented on the server with Express to authorize Twitch users using access token.
+- 📱 Fully Responsive application.
+
+## Video Walk-Through
+
+<div>
+  <a href="https://youtu.be/sL7DJK9GA74" target="_blank">
+    <img
+      alt="Gaming Punk"
+      src="https://i.imgur.com/co4dANA.png"
+    />
+  </a>
+</div>
+
+## ScreenShots
+
+<div>
+    <img
+      alt="Gaming Punk Login page"
+      src="https://i.imgur.com/2enTsPE.png"
+    />
+  <hr />
+    <img
+      alt="Gaming Punk Home page"
+      src="https://i.imgur.com/CD4Uexj.png"
+    />
+  <hr />
+    <img
+      alt="Gaming Punk modal"
+      src="https://i.imgur.com/fTHUOkw.png"
+    />
+  <hr />
+    <img
+      alt="Gaming Punk games dashboard"
+      src="https://i.imgur.com/NhucFuj.png"
+    />
+  <hr />
+    <img
+      alt="Gaming Punk stream dashboard"
+      src="https://i.imgur.com/yJqqeEH.png"
+    />
+  <hr />
+    <img
+      alt="Gaming Punk video player"
+      src="https://i.imgur.com/dKTUCNE.png"
+    />
+</div>
+
+## Stack Used
+
+### Frontend
+
+- UI framework used: [React.js](https://reactjs.org/)
+- State management library used: [React-Redux](https://react-redux.js.org/)
+- Component design: [Material UI](https://material-ui.com/)
+
+### Backend
+
+- Server: [Express.js](https://expressjs.com/)
+
+## Hosting
+
+### Frontend
+
+- [Netlify](https://www.netlify.com/)
+
+### Server
+
+- [Heroku](https://www.heroku.com/)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -14,11 +103,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
 
 Builds the app for production to the `build` folder.\
@@ -28,43 +112,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
