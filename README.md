@@ -12,6 +12,8 @@
 
 <hr />
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9852fda0-3417-4422-af77-6972229ec484/deploy-status)](https://app.netlify.com/sites/gaming-punk/deploys)
+
 ## Features
 
 - 🎮 Watch live streams from top gaming streamers around the world.
