@@ -59,7 +59,7 @@ const VideoPlayer = ({ location: { stream }, pathname, accessToken }) => {
             <iframe
               className={classes.chatEmbed}
               title={channel}
-              src={`https://www.twitch.tv/embed/${channel}/chat?darkpopout&parent=localhost&parent=gamingpunk.netlify.app`}
+              src={`https://www.twitch.tv/embed/${channel}/chat?darkpopout&parent=localhost&parent=gaming-punk.netlify.app`}
               height="100%"
               width="100%"
             ></iframe>
