@@ -12,7 +12,7 @@
 
 <hr />
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9852fda0-3417-4422-af77-6972229ec484/deploy-status)](https://app.netlify.com/sites/gaming-punk/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bcc24904-4915-4a0c-a91d-4dd234f61b51/deploy-status)](https://app.netlify.com/sites/gaming-punk/deploys)
 
 ## Features
 
